@@ -3,19 +3,24 @@ import sys
 import os
 import logging
 
-# Configurar o logger
-log_file = os.path.expanduser("~/pythonanywhere-auto-test/logs/robot_log.log")
+# Caminho do diretório de logs
+log_dir = os.path.expanduser("~/pythonanywhere-auto-test/src/logs")
+log_file = os.path.join(log_dir, "robot_log.log")
+
+# Criar diretório de logs se não existir
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
+# Configurar logging
 logging.basicConfig(
     filename=log_file,
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-# Corrigir caminho do sys.path para evitar problemas de importação
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from src.core.robot_registry import ROBOTS  # Ajustado para importar corretamente
-
+from src.core.robot_registry import ROBOTS
 
 def execute(name):
     """Executa um robô com base no nome fornecido."""
@@ -28,7 +33,6 @@ def execute(name):
             logging.error(f"Erro ao executar {name}: {e}", exc_info=True)
     else:
         logging.warning(f"Robô '{name}' não encontrado.")
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Gerenciador de Execução de Robôs RPA")
